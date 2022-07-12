@@ -38,6 +38,23 @@ class Executor:
         )
 
     def close(self):
+        self.loop.close()
         self.executor.shutdown(wait=False)
-        self.loop.stop()
-        print("closed")
+        print("Closed")
+
+
+if __name__ == "__main__":
+    import time
+
+    def task():
+        while True:
+            print("Hello World")
+            time.sleep(1)
+
+    Exec = Executor()
+
+    try:
+        Exec.run(task)
+    except KeyboardInterrupt:
+        Exec.close()
+        exit(0)
