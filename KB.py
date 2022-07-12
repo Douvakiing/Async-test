@@ -3,7 +3,6 @@ import os
 # Windows
 if os.name == "nt":
     import msvcrt
-
 # Posix (Linux, OS X)
 else:
     import sys
@@ -87,7 +86,6 @@ class KBHit:
 
 # Test
 if __name__ == "__main__":
-
     kb = KBHit()
 
     print("Hit any key, or ESC to exit")
