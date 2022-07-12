@@ -11,16 +11,20 @@ Server = TCP_Server()
 Executor = Executor()
 
 
-def main():
-    while True:
-        time.sleep(1)
-        print(Kb.get_key(), Server.get_msg())
+class MainTask(Task):
+    def __init__(self):
+        super().__init__()
+        super().set_tasks(self.main_task)
+
+    def main_task(self):
+        while not self.should_cancel:
+            # time.sleep(1)
+            print(Kb.get_key(), Server.get_msg())
 
 
 if __name__ == "__main__":
     try:
-        Executor.run(KB, SERV, main)
+        Executor.run(Kb, Server, MainTask())
 
     except KeyboardInterrupt:
-        print("closed")
-        sys.exit()
+        Executor.close()
