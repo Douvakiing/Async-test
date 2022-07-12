@@ -4,20 +4,16 @@ import asyncio
 
 class Executor:
     def __init__(self) -> None:
-        self.loop = asyncio.get_event_loop()
-        self.executor = None
+        self.loop: asyncio.AbstractEventLoop = asyncio.get_event_loop()
+        self.executor: concurrent.futures.ThreadPoolExecutor = None
+        self.tasks = []
 
     async def __list_executors__(self, loop, executor, tasks=[]) -> None:
         await asyncio.wait(
             {
                 *[
                     j
-                    for sub in [
-                        [loop.run_in_executor(executor, task)]
-                        if callable(task)
-                        else task.get_executor(loop, executor)
-                        for task in tasks
-                    ]  # unpack the list of executers in each class or from raw function
+                    for sub in [task.get_executor(loop, executor) for task in tasks]
                     for j in sub
                 ]
             },
@@ -25,8 +21,9 @@ class Executor:
         )
 
     def run(self, *executables) -> None:
+        self.tasks = executables
         self.executor = concurrent.futures.ThreadPoolExecutor(
-            max_workers=len(executables) + 1
+            max_workers=len(executables)
         )
 
         self.loop.run_until_complete(
@@ -38,23 +35,38 @@ class Executor:
         )
 
     def close(self):
-        self.loop.close()
-        self.executor.shutdown(wait=False)
-        print("Closed")
+        for task in self.tasks:
+            task.cancel()
 
 
 if __name__ == "__main__":
     import time
-
-    def task():
-        while True:
-            print("Hello World")
-            time.sleep(1)
+    from task import Task
 
     Exec = Executor()
 
+    class TestTask(Task):
+        def __init__(self):
+            super().__init__()
+            super().set_tasks(self.task1, self.task2)
+
+        def task1(self):
+            i = 0
+            while not self.should_cancel:
+                i += 1
+                print("Task: 1,", i)
+                time.sleep(1)
+
+        def task2(self):
+            i = 0
+            while not self.should_cancel:
+                i -= 1
+                print("Task: 2", i)
+                time.sleep(1)
+
+    tt = TestTask()
+
     try:
-        Exec.run(task)
+        Exec.run(tt)
     except KeyboardInterrupt:
         Exec.close()
-        exit(0)
