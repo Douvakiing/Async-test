@@ -23,7 +23,7 @@ class Executor:
     def run(self, *executables) -> None:
         self.tasks = executables
         self.executor = concurrent.futures.ThreadPoolExecutor(
-            max_workers=len(executables)
+            max_workers=len(executables) + 1
         )
 
         self.loop.run_until_complete(
