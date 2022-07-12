@@ -57,5 +57,8 @@ class TCP_Server(Task):
 
 
 if __name__ == "__main__":
-    SERV = TCP_Server()
-    SERV.server_handler()
+    try:
+        SERV = TCP_Server()
+        SERV.server_handler()
+    except KeyboardInterrupt:
+        exit(0)
