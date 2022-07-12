@@ -4,7 +4,8 @@ import socket, select
 
 class TCP_Server(Task):
     def __init__(self, port=6942):
-        super().__init__(self, self.server_handler)
+        super().__init__()
+        super().set_tasks(self.server_handler)
 
         self.port = port
 
@@ -25,7 +26,7 @@ class TCP_Server(Task):
     def server_handler(self):
         print(str((socket.gethostbyname(socket.gethostname()), self.port)))
 
-        while True:
+        while not self.should_cancel:
             rList, _, _ = select.select(self.connected_list, [], [])
 
             for sock in rList:
