@@ -6,20 +6,20 @@ import logging
 import time
 import sys
 
-KB = Keyboard()
-SERV = TCP_Server()
-EXEC = Executor()
+Kb = Keyboard()
+Server = TCP_Server()
+Executor = Executor()
 
 
 def main():
     while True:
         time.sleep(1)
-        print(KB.get_key(), SERV.get_msg())
+        print(Kb.get_key(), Server.get_msg())
 
 
 if __name__ == "__main__":
     try:
-        EXEC.run(KB, SERV, main)
+        Executor.run(KB, SERV, main)
 
     except KeyboardInterrupt:
         print("closed")
