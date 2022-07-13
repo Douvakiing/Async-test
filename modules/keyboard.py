@@ -1,5 +1,5 @@
-from task import Task
-from KB import KBHit
+from .task import Task
+from .KB import KBHit
 
 
 class Keyboard(Task):
