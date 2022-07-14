@@ -1,6 +1,5 @@
-import asyncio
 import concurrent.futures
-from concurrent.futures import thread
+import asyncio
 from typing import Callable, List
 
 
@@ -39,8 +38,7 @@ class Executor:
     def close(self):
         for task in self.tasks:
             task.cancel()
-        self.executor._threads.clear()
-        concurrent.futures.thread._threads_queues.clear()
+
 
 if __name__ == "__main__":
     import time
@@ -58,7 +56,6 @@ if __name__ == "__main__":
 
         def task(self):
             print("Starting")
-            time.sleep(100000)
 
         def looping_task1(self):
             self.i1 += 1
