@@ -17,7 +17,6 @@ class Keyboard(Task):
 
     def get_key(self):
         key = self.key
-        self.key = ""
         return key
 
 

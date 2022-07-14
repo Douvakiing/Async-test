@@ -7,7 +7,7 @@ import time
 
 Kb = Keyboard()
 Server = TCP_Server()
-Executor = Executor()
+Exec = Executor()
 
 
 class MainTask(Task):
@@ -16,14 +16,17 @@ class MainTask(Task):
         super().set_looping_tasks(self.main_task)
 
     def main_task(self):
-        time.sleep(1)
+        # time.sleep(1)
         print(Kb.get_key(), Server.get_msg())
+
+        if Kb.get_key() == "q":
+            Exec.close()
 
 
 if __name__ == "__main__":
     try:
-        Executor.run(Kb, MainTask(), Server)
+        Exec.run(Kb, MainTask(), Server)
 
     except KeyboardInterrupt:
         print("Closing")
-        Executor.close()
+        Exec.close()
