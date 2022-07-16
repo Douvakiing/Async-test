@@ -13,6 +13,7 @@ class Task:
 
     def set_looping_tasks(self, *tasks):
         for task in tasks:
+            global x
 
             def x():
                 while not self.event.is_set():
@@ -28,7 +29,9 @@ class Task:
         self.event.set()
 
     def get_executor(self, loop, executor):
-        return [loop.run_in_executor(executor, task) for task in self.tasks]
+        return [
+            loop.run_in_executor(executor, task, i) for i, task in enumerate(self.tasks)
+        ]
 
 
 if __name__ == "__main__":
